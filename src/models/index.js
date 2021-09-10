@@ -9,7 +9,7 @@ const sequelize = new Sequelize(dbConfig);
 const db = {};
 
 db.Sequelize = Sequelize;
-db.Sequelize = sequelize;
+db.sequelize = sequelize;
 db.User = User(sequelize, Sequelize);
 db.Transaction = Transaction(sequelize, Sequelize);
 db.Beneficiary = Beneficiary(sequelize, Sequelize);
