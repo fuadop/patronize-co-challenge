@@ -21,7 +21,8 @@ const validators = {
       .withMessage('email field cannot be empty')
       .isString()
       .isEmail()
-      .withMessage('Should be an email address'),
+      .withMessage('Should be an email address')
+      .toLowerCase(),
     body('name')
       .not()
       .isEmpty()
@@ -44,7 +45,8 @@ const validators = {
       .withMessage('email field cannot be empty')
       .isString()
       .isEmail()
-      .withMessage('Should be an email address'),
+      .withMessage('Should be an email address')
+      .toLowerCase(),
     body('password')
       .not()
       .isEmpty()
@@ -57,7 +59,7 @@ const validators = {
     body('to')
       .not()
       .isEmpty()
-      .withMessage('email field cannot be empty')
+      .withMessage('to field cannot be empty')
       .isString()
       .isEmail()
       .withMessage('Should be an email address'),
@@ -69,24 +71,38 @@ const validators = {
       .withMessage('Should be numeric')
   ],
   addBeneficiary: [
-    body('bankName')
+    body('bankCode')
       .not()
       .isEmpty()
-      .withMessage('bankName field cannot be empty')
-      .isString()
-      .withMessage('Should be of type string'),
-    body('accountName')
-      .not()
-      .isEmpty()
-      .withMessage('accountName field cannot be empty')
-      .isString()
-      .withMessage('Should be of type string'),
+      .withMessage('bankCode field cannot be empty')
+      .isNumeric()
+      .withMessage('Should be numeric'),
     body('accountNumber')
       .not()
       .isEmpty()
       .withMessage('accountNumber field cannot be empty')
       .isNumeric()
       .withMessage('Should be numeric')
+  ],
+  getPaymentModal: [
+    body('amount')
+      .not()
+      .isEmpty()
+      .withMessage('amount field cannot be empty')
+      .isNumeric()
+      .withMessage('Can only contain numbers')
+  ],
+  withdraw: [
+    body('amount')
+      .not()
+      .isEmpty()
+      .withMessage('amount field cannot be empty')
+      .isNumeric()
+      .withMessage('Can only contain numbers'),
+    body('beneficiaryId')
+      .not()
+      .isEmpty()
+      .withMessage('beneficiaryId field cannot be empty')
   ]
 };
 

@@ -12,6 +12,7 @@ import usersRouter from './routes/users';
 import authRouter from './routes/auth';
 import payRouter from './routes/pay';
 import transactionsRouter from './routes/transactions';
+import sampleResponse from './utils/response';
 
 const debug = require('debug')('patronize-co-challenge:server');
 const app = express();
@@ -20,7 +21,8 @@ const app = express();
 (async () => {
   await db.sequelize.authenticate();
   await db.sequelize.sync({
-    alter: true
+    alter: true,
+    logging: false,
   });
 
   debug('Database connection established');
@@ -29,9 +31,6 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
-// set the app env
-app.set('env', process.env.NODE_ENV);
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -39,11 +38,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/auth', authRouter);
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/pay', payRouter);
 app.use(verifyUser);
-app.use('/users', usersRouter);
-app.use('/pay', payRouter);
-app.use('/transaction', transactionsRouter);
+app.use('/api/v1/users', usersRouter);
+app.use('/api/v1/transaction', transactionsRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -52,13 +51,9 @@ app.use((req, res, next) => {
 
 // error handler
 app.use((err, req, res, next) => {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  const response = sampleResponse(500, 'Error', null, err.message);
+  console.log(err);
+  return res.status(response.status).json(response);
 });
 
 module.exports = app;

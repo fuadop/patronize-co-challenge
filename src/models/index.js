@@ -14,4 +14,8 @@ db.User = User(sequelize, Sequelize);
 db.Transaction = Transaction(sequelize, Sequelize);
 db.Beneficiary = Beneficiary(sequelize, Sequelize);
 
+// Associate models
+db.User.associate(sequelize.models);
+db.Beneficiary.associate(sequelize.models);
+
 export default db;

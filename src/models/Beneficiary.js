@@ -6,11 +6,11 @@ module.exports = (sequelize, Sequelize) => {
       return { ...this.get(), id: undefined }
     }
 
-    associate({ User }) {
+    static associate({ User }) {
       Beneficiary.belongsTo(User, {
         foreignKey: 'userId',
-        as: 'user',
         targetKey: '_id',
+        as: 'user'
       })  
     }
   };
@@ -22,16 +22,13 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       primaryKey: true,
     },
-    bankName: {
+    bankCode: {
       type: Sequelize.STRING,
       allowNull: false,
     },
     accountNumber: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: false,
-      validate: {
-        isInt: true,
-      },
     },
     accountName: {
       type: Sequelize.STRING,

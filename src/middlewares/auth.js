@@ -20,7 +20,7 @@ export const verifyUser = (req, res, next) => {
   // Verify token with jwt.
   const data = jwt.verify(token, process.env.JWT_SECRET);
   req.user = data;
-  res.locals.user = user;
+  res.locals.user = data;
 
   return next();
 };

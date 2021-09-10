@@ -4,14 +4,24 @@ import bcrypt from 'bcrypt';
 module.exports = (sequelize, Sequelize) => {
   class User extends Model {
     toJSON() {
-      return { ...this.get(), id: undefined }
+      return { ...this.get(), id: undefined, password: undefined }
     }
 
-    associate({ Beneficiary }) {
+    static associate({ Beneficiary }){
       User.hasMany(Beneficiary, {
         foreignKey: 'userId',
-        as: 'user',
+        as: 'beneficiaries'
       })
+    }
+
+    static async doesUserExist(email) {
+      const user = await User.findOne({
+        where: {
+          email
+        }
+      });
+
+      return !!user;
     }
   };
 
@@ -28,6 +38,13 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
       validate: {
         isEmail: true,
+      },
+      /**
+       * 
+       * @param {string} email 
+       */
+      set(email) {
+        this.setDataValue('email', email.toLowerCase())
       }
     },
     name: {
@@ -38,16 +55,13 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.DOUBLE,
       defaultValue: 0,
       allowNull: false,
-      validate: {
-        isInt: true,
-      }
     },
     password: {
       type: Sequelize.STRING,
       allowNull: false,
       set(password) {
         // Hash password before storing
-        const hash = bcrypt.hashSync(password);
+        const hash = bcrypt.hashSync(password, 10);
         this.setDataValue('password', hash)
       }  
     }
